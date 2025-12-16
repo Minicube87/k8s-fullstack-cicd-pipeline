@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.todo.backend</groupId>
+  <artifactId>todo-backend</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <java.version>17</java.version> <!-- Java 17 Version -->
+  </properties>
+
+  <dependencies>
+    <!-- Spring Boot Starter Web -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>2.5.5</version>
+    </dependency>
+
+    <!-- Spring Boot Starter Logging -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-logging</artifactId>
+      <version>2.5.5</version>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <plugins>
+        <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+      <version>2.5.5</version>
+      <executions>
+        <execution>
+          <goals>
+            <goal>repackage</goal> <!-- This goal repackages the JAR to include the main class -->
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version> <!-- Specify the maven compiler plugin version -->
+        <configuration>
+          <source>${java.version}</source> <!-- Java 17 -->
+          <target>${java.version}</target> <!-- Java 17 -->
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>2.5.5</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
