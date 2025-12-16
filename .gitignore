@@ -1,0 +1,10 @@
+# .gitignore
+.env
+*.log
+kubeconfig
+.kube/
+target/
+*.jar
+node_modules/
+.idea/
+*.iml
