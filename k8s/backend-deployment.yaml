@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  #namespace: jan-dev
+  namespace: jan-dev
 spec:
   replicas: 1
   selector:
@@ -15,8 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        imagePullPolicy: Never # rausnehmen wenn image aus nexus gepulled wird
-        image: todo-backend:v1
-        #nexus.skyered-devops.de/kurs3/jan/todo-backend:v1
+        image: minicube78/todo-backend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8080
