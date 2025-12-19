@@ -189,6 +189,7 @@ frontend-78d8dcd697-bj7hs   0/1     ImagePullBackOff   0          17s
 **Root Cause:** Kubernetes couldn't pull images from Nexus registry because I didn't have credentials configured.
 
 **Debug command:**
+
 ```bash
 kubectl describe pod <pod-name> -n jan-dev | tail -20
 ```
@@ -345,6 +346,9 @@ k8s-fullstack-cicd-pipeline/
 │   ├── frontend-service.yaml
 │   ├── backend-deployment.yaml
 │   └── backend-service.yaml
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yaml
 ├── docker-compose.yaml
 ├── Jenkinsfile
 ├── .gitignore
@@ -353,15 +357,63 @@ k8s-fullstack-cicd-pipeline/
 
 ---
 
-## What's Next
+## Phase 8: From Jenkins to GitHub Actions (Day 3)
 
-- [ ] Get Nexus credentials and test full pipeline
-- [ ] Add health checks to deployments
-- [ ] Implement rolling update strategy
-- [ ] Add Ingress for cleaner external access
-- [ ] Set up monitoring (Prometheus/Grafana)
+### The Problem
+
+The school Jenkins server had restrictions:
+
+- No global credentials allowed
+- Nexus registry architecture issues
+- Cluster went offline
+
+### The Solution
+
+Switched to **GitHub Actions** – secrets stored in repo settings, no infrastructure needed.
+
+```yaml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+      - run: docker build & docker push
+      
+  deploy:
+    needs: build-and-push
+    steps:
+      - uses: medyagh/setup-minikube@latest
+      - run: kubectl apply -f k8s/
+```
+
+### Key Learnings from Day 3
+
+| Topic | Learning |
+|-------|----------|
+| Registry switch | Nexus → Docker Hub (same concepts, different URL) |
+| imagePullPolicy | `Always` for registry, `Never` for local builds |
+| GitHub Secrets | Stored encrypted, injected at runtime |
+| Minikube in CI | Fresh cluster per run – no state between jobs |
 
 ---
+
+## What's Completed
+
+- [x] Frontend Dockerfile (Nginx)
+- [x] Backend Dockerfile (Multi-Stage Maven/JRE)
+- [x] Docker Compose for local testing
+- [x] Kubernetes Deployments & Services
+- [x] Images on Docker Hub (`minicube78/todo-*`)
+- [x] GitHub Actions CI/CD Pipeline
+- [x] Successful deployment on k3s cluster
+- [x] Successful pipeline run on GitHub Actions
 
 ## Memorable Quotes from This Session
 
@@ -372,8 +424,24 @@ k8s-fullstack-cicd-pipeline/
 > "`imagePullPolicy: Never` is great for local testing, dangerous in production."
 
 > "Every layer builds on the previous one. You can't skip ahead."
+> "The later you find a bug, the more expensive it is."
+
+> "Shift Left = Find problems as early as possible."
 
 ---
 
-*Written by: A Junior DevOps Engineer learning by doing*
-*Date: December 2024*
+## Final Thoughts
+
+This project taught me that DevOps is not just about tools, more like:
+
+1. **Understanding the flow**: Code → Build → Test → Deploy → Monitor
+2. **Automation mindset**: If you do it twice, automate it
+3. **Fail fast, fix fast**: Every push should trigger the pipeline
+4. **Documentation matters**: Future-me will thank present-me
+
+The biggest win: I now understand *why* things are done this way, not just *how*.
+
+---
+
+*Written by: A Junior DevOps Engineer learning by doing*  
+*Date: December 2025*
