@@ -8,3 +8,5 @@ target/
 node_modules/
 .idea/
 *.iml
+learnings.md
+temp/
